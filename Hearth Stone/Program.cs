@@ -9,9 +9,10 @@ namespace Hearth_Stone
     class Program
     {
         static void Main(string[] args)
-        {
-            console c = new console();
-            c.渲染英雄();
+        { 
+            Hero h = new Hero(0);
+            console c = new console(h);
+            c.display();
         }
 
         public static int[] range(int a)

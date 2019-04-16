@@ -10,9 +10,16 @@ namespace test
     {
         static void Main(string[] args)
         {
-            int[][] a = new int[5][];
-            int[] b = new int[] { 3, 4 };
-            a[2] = b;
+            char[,] a = new char[1, 5];
+            渲染边框(a);
+            foreach (int i in Program.range(a.GetLength(0)))
+            {
+                foreach (int j in Program.range(a.GetLength(1)))
+                {
+                    Console.Write(a[i, j]);
+                }
+                Console.WriteLine();
+            }
         }
 
         public static int[] range(int a)
@@ -25,14 +32,25 @@ namespace test
             return number;
         }
 
-        public static void change(string[] big,string[] small)
+        public static void 渲染边框(char[,] a)
         {
-            int i = (big.Length - small.Length) / 2;
-            foreach (int j in range(small.Length))
+            foreach (int i in Program.range(a.GetLength(1)))
             {
-                big[i + j] = small[j];
+                a[a.GetLowerBound(0), i] = '－';
             }
-            
+
+            for (int i = 1; i < a.GetLength(0) - 1; i++)
+            {
+                //二维数组取下限和上限
+                a[i, a.GetUpperBound(1)] = '｜';
+                a[i, a.GetLowerBound(1)] = '｜';
+            }
+
+            foreach (int i in Program.range(a.GetLength(1)))
+            {
+                a[a.GetUpperBound(0), i] = '－';
+            }
+
         }
     }
 
