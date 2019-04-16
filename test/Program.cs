@@ -10,16 +10,11 @@ namespace test
     {
         static void Main(string[] args)
         {
-            char[,] a = new char[1, 5];
-            渲染边框(a);
-            foreach (int i in Program.range(a.GetLength(0)))
-            {
-                foreach (int j in Program.range(a.GetLength(1)))
-                {
-                    Console.Write(a[i, j]);
-                }
-                Console.WriteLine();
-            }
+            string str = "GTAZB_JiangjBen_123";
+            int i = 14, length = 8;
+            string str0 = str.Remove(i, length);
+            Console.WriteLine(str);
+            Console.WriteLine(str0);
         }
 
         public static int[] range(int a)

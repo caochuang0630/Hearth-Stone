@@ -46,6 +46,7 @@
     <Compile Include="Card.cs" />
     <Compile Include="console.cs" />
     <Compile Include="Hero.cs" />
+    <Compile Include="Method.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
