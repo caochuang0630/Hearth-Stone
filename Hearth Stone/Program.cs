@@ -10,6 +10,7 @@ namespace Hearth_Stone
     {
         static void Main(string[] args)
         { 
+            //主程序
             Hero h0 = new Hero(0);
             Hero h1 = new Hero(1);
             Card card0 = new Card("炎魔之王拉格纳罗斯",8,8, "让火焰净化一切");
