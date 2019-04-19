@@ -14,11 +14,16 @@ namespace Hearth_Stone
             Hero h0 = new Hero(0);
             Hero h1 = new Hero(1);
             Card card0 = new Card("炎魔之王拉格纳罗斯",8,8, "让火焰净化一切");
-            Card[] card1 = new Card[2];
-            card1[0] = card0;
-            card1[1] = card0;
-            console c = new console(h0,h1,card1);
-            c.渲染敌方随从(card1);
+            Card[] card1 = new Card[7]; //敌方随从
+            Card[] card2 = new Card[7]; //我方随从
+            bool b = true;
+            foreach (int i in range(card1.Length))
+            {
+                card1[i] = card0;
+                card2[i] = card0;
+            }
+            console c = new console(h0,h1,card1,card2,b,5,5);
+            c.display();
             
             
         }
