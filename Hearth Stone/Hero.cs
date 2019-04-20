@@ -8,7 +8,8 @@ namespace Hearth_Stone
 {
     class Hero
     {
-        public string[] hero; 
+        public string[] hero;       //英雄的相关信息
+        public int hero_blood;  //英雄的血
         //英雄职业名字数组
         public static string[] hero0 = new string[] { "法师", "吉安娜","火焰冲击" };
         public static string[] hero1 = new string[] { "牧师", "安度因", "次级治疗术" };
@@ -53,6 +54,7 @@ namespace Hearth_Stone
                     this.hero = hero8;
                     break;
             }
+            this.hero_blood = 30;
         }
         //返回英雄职业和名字索引器
         public string[] this [string n]

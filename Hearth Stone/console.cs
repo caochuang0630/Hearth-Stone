@@ -19,9 +19,12 @@ namespace Hearth_Stone
         private int hero_space_Entourage = 3;           //保存英雄渲染和随从渲染的间隔
         private int crystal_0;                          //保存双方水晶数量
         private int crystal_1;
+        private Card_Library Remaining_card;            //敌方卡牌相关信息
+        private Card_Library Remaining_card1;            //我方卡牌相关信息
+
 
         //构造方法
-        public console(Hero h0,Hero h1,Card[] te0,Card[] te1,bool r,int cry0,int cry1)
+        public console(Hero h0,Hero h1,Card[] te0,Card[] te1,bool r,int cry0,int cry1, Card_Library rc, Card_Library rc1)
         {
             this.team0_hero = h0;
             this.team1_hero = h1;
@@ -30,6 +33,13 @@ namespace Hearth_Stone
             this.round = r;
             this.crystal_0 = cry0;
             this.crystal_1 = cry1;
+            this.Remaining_card = rc;
+            this.Remaining_card1 = rc1;
+        }
+
+        public console()
+        {
+
         }
 
         //总输出方法
@@ -42,6 +52,7 @@ namespace Hearth_Stone
             this.渲染我方随从(team1_Entourage);
             this.渲染中线(round);
             this.渲染水晶(crystal_0,crystal_1);
+            this.渲染卡牌剩余();
             foreach (int i in Program.range(display0.GetLength(0)))
             {
                 foreach (int j in Program.range(display0.GetLength(1)))
@@ -129,19 +140,46 @@ namespace Hearth_Stone
             }
         }
 
+        //把一个数组插入进一个大数组里面去，条件是角标
+        public char[] 插入(char[] big,char[] small,int a)
+        {
+            for (int i = a,j = 0; i<a+small.Length;i++,j++)
+            {
+                big[i] = small[j];
+            }
+            return big;
+        }
+
         //渲染英雄
         public void 渲染英雄(Hero h0,Hero h1)
         {
+
             //渲染第一个英雄
             //先渲染英雄单个，再把渲染进整个大画面
             char[,] hero0 = new char[5,8];          //英雄分辨率
             填充空格(hero0);
             渲染边框(hero0);
-            char[] a = 居中(取一维数组(hero0,2),h0.hero[0].ToCharArray());
+
+            //把英雄名字放进去
+            char[] a = 居中(取一维数组(hero0,2),h0.hero[1].ToCharArray());
             foreach (int i in Program.range(hero0.GetLength(1)))
             {
                 hero0[2, i] = a[i];
             }
+
+            //把英雄血放进去
+            char[] blood = new char[h0.hero_blood.ToString().Length];
+            foreach (int i in Program.range(blood.Length))
+            {
+                blood[i] = Method.数字半转全(h0.hero_blood.ToString()[i]);
+            }
+            char[] a_name = 居中(取一维数组(hero0, 3), blood);
+            foreach (int i in Program.range(hero0.GetLength(1)))
+            {
+                hero0[3, i] = a_name[i];
+            }
+
+
             //把渲染进整个大画面
             char[,] hero0_display = new char[hero0.GetLength(0),display0.GetLength(1)];
             this.填充空格(hero0_display);
@@ -153,6 +191,12 @@ namespace Hearth_Stone
                 {
                     hero0_display[i, j] = b[j];
                 }
+            }
+            //渲染英雄技能
+            char[] hero0_Skill = 插入(取一维数组(hero0_display, hero0_display.GetLength(0) / 2), h0.hero[2].ToCharArray(), 5);
+            foreach (int i in Program.range(hero0_display.GetLength(1)))
+            {
+                hero0_display[hero0_display.GetLength(0) / 2, i] = hero0_Skill[i];
             }
             //把画面代替成总输出二维数组里面去
             foreach (int i in Program.range(hero0_display.GetLength(0)))
@@ -168,10 +212,24 @@ namespace Hearth_Stone
             char[,] hero1 = new char[5, 8];
             填充空格(hero1);
             渲染边框(hero1);
-            char[] a1 = 居中(取一维数组(hero1, 2), h1.hero[0].ToCharArray());
+
+            //把英雄名字放进去
+            char[] a1 = 居中(取一维数组(hero1, 2), h1.hero[1].ToCharArray());
             foreach (int i in Program.range(hero1.GetLength(1)))
             {
                 hero1[2, i] = a1[i];
+            }
+
+            //把英雄血放进去
+            char[] blood1 = new char[h1.hero_blood.ToString().Length];
+            foreach (int i in Program.range(blood1.Length))
+            {
+                blood1[i] = Method.数字半转全(h1.hero_blood.ToString()[i]);
+            }
+            char[] a_name1 = 居中(取一维数组(hero1, 3), blood1);
+            foreach (int i in Program.range(hero1.GetLength(1)))
+            {
+                hero1[3, i] = a_name1[i];
             }
             //把渲染进整个大画面
             char[,] hero1_display = new char[hero1.GetLength(0), display0.GetLength(1)];
@@ -185,14 +243,21 @@ namespace Hearth_Stone
                     hero1_display[i, j] = b[j];
                 }
             }
+            //渲染英雄技能
+            char[] hero1_Skill = 插入(取一维数组(hero1_display, hero1_display.GetLength(0) / 2), h1.hero[2].ToCharArray(), 5);
+            foreach (int i in Program.range(hero1_display.GetLength(1)))
+            {
+                hero1_display[hero1_display.GetLength(0) / 2, i] = hero1_Skill[i];
+            }
             //把画面代替成总输出二维数组里面去
-            for (int i = display0.GetLength(0)-2,k = hero1_display.GetLength(0)-1;i> display0.GetLength(0) - 2-(hero1_display.GetLength(0));i--,k--)
+            for (int i = display0.GetLength(0) - 2, k = hero1_display.GetLength(0) - 1; i > display0.GetLength(0) - 2 - (hero1_display.GetLength(0)); i--, k--)
             {
                 foreach (int j in Program.range(hero1_display.GetLength(1)))
                 {
                     display0[i, j] = hero1_display[k, j];
                 }
             }
+
         }
 
         //渲染一张卡
@@ -443,12 +508,45 @@ namespace Hearth_Stone
 
             foreach (int i in Program.range(team0_crystals.Length))
             {
-                display0[hero0.GetLength(0), i+1 ] = team0_crystals[i];
+                display0[hero0.GetLength(0), i+2 ] = team0_crystals[i];
             }
             foreach (int i in Program.range(team0_crystals.Length))
             {
-                display0[display0.GetLength(0) - hero0.GetLength(1)+2, i + 1] = team0_crystals[i];//加二是为了输出水晶卡在横线上
+                display0[display0.GetLength(0) - hero0.GetLength(1)+2, i + 2] = team0_crystals[i];//加二是为了输出水晶卡在横线上
             }
         }
+
+        //渲染剩余卡牌
+        public void 渲染卡牌剩余()
+        {
+            string card_Remaining = "还剩：";      //剩余卡牌
+            char[] Remaining =new char[Remaining_card.library.Length.ToString().Length];     //剩余卡牌数量
+            foreach (int i in Program.range(Remaining.Length))
+            {
+                Remaining[i] = Method.数字半转全(Remaining_card.library.Length.ToString()[i]);
+                card_Remaining += Remaining[i];
+            }
+            card_Remaining += "张牌";
+            foreach (int i in Program.range(display0.GetLength(1)))
+            {
+                display0[3, i] = 插入(取一维数组(display0, 3), card_Remaining.ToCharArray(), display0.GetLength(1) / 2 + 10)[i];
+            }
+
+            string card_Remaining1 = "还剩：";      //剩余卡牌
+            char[] Remaining1 = new char[Remaining_card1.library.Length.ToString().Length];     //剩余卡牌数量
+            foreach (int i in Program.range(Remaining1.Length))
+            {
+                Remaining1[i] = Method.数字半转全(Remaining_card1.library.Length.ToString()[i]);
+                card_Remaining1 += Remaining1[i];
+            }
+            card_Remaining1 += "张牌";
+            foreach (int i in Program.range(display0.GetLength(1)))
+            {
+                display0[display0.GetLength(0)-1-3, i] = 插入(取一维数组(display0, display0.GetLength(0) - 1 - 3), card_Remaining1.ToCharArray(), display0.GetLength(1) / 2 + 10)[i];
+            }
+
+
+        }
+
     }
 }

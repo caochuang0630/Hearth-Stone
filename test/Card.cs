@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hearth_Stone
+namespace test
 {
     class Card
     {
@@ -17,11 +17,10 @@ namespace Hearth_Stone
         public bool Alive;          //随从是否存活
 
         //构造方法
-        public Card(string cn,int ca,int cb,string cd, int cry)
+        public Card(string cn,int ca,int cb,string cd)
         {
             this.card_name = cn;
             this.card_describe = cd;
-            this.crystal = cry;
             if (ca<99&&cb<99)
             {
                 this.card_attack = ca;

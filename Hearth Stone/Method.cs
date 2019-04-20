@@ -47,6 +47,44 @@ namespace Hearth_Stone
                     return ' ';
             }
         }
+        public static char 数字半转全(int i)
+        {
+            switch (i)
+            {
+                case 0:
+                    return '０';
+                    break;
+                case 1:
+                    return '１';
+                    break;
+                case 2:
+                    return '２';
+                    break;
+                case 3:
+                    return '３';
+                    break;
+                case 4:
+                    return '４';
+                    break;
+                case 5:
+                    return '５';
+                    break;
+                case 6:
+                    return '６';
+                    break;
+                case 7:
+                    return '７';
+                    break;
+                case 8:
+                    return '８';
+                    break;
+                case 9:
+                    return '９';
+                    break;
+                default:
+                    return ' ';
+            }
+        }
 
         //等长数组和不等长数组转换__char
         public static char[][] 等长转不等长(char[,] a)
@@ -60,5 +98,27 @@ namespace Hearth_Stone
             }
             return b;
         }
+
+        //攻击方法
+        public static Card[] attack(Card A, Card B)
+        {
+            B.card_attack -= A.card_blood;
+            A.card_attack -= B.card_blood;
+            if (B.card_attack<=0)
+            {
+                B.Alive = false;
+            }
+            if (A.card_attack <= 0)
+            {
+                A.Alive = false;
+            }
+            Card[] Entourage = new Card[2];
+            Entourage[0] = A;
+            Entourage[1] = B;
+            return Entourage;
+
+        }
+
+
     }
 }
