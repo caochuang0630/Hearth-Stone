@@ -100,25 +100,56 @@ namespace Hearth_Stone
         }
 
         //攻击方法
-        public static Card[] attack(Card A, Card B)
+        public static Card[][] attack(Card[] A,int i, Card[] B,int j)
         {
-            B.card_attack -= A.card_blood;
-            A.card_attack -= B.card_blood;
-            if (B.card_attack<=0)
+            B[j].card_blood = B[j].card_blood - A[i].card_attack;
+            A[i].card_blood = A[i].card_blood - B[j].card_attack;
+            if (B[j].card_blood <= 0)
             {
-                B.Alive = false;
+                B[j].Alive = false;
+                B = 减数组(B,j);
             }
-            if (A.card_attack <= 0)
+            if (A[i].card_blood <= 0)
             {
-                A.Alive = false;
+                A[i].Alive = false;
+                A = 减数组(A, i);
             }
-            Card[] Entourage = new Card[2];
+            Card[][] Entourage = new Card[2][];
             Entourage[0] = A;
             Entourage[1] = B;
             return Entourage;
-
         }
 
+        //输出一个二维数组
+        public static void 输出二维数组(char[,] array)
+        {
+            foreach (int i in Program.range(array.GetLength(0)))
+            {
+                foreach (int j in Program.range(array.GetLength(1)))
+                {
+                    Console.Write(array[i, j]);
+                }
+                Console.WriteLine();
+            }
+        }
 
+        //一个数组减一个元素
+        public static Card[] 减数组(Card[] big,int reduce)
+        {
+            Card[] new_big = new Card[big.Length-1];
+            int i = 0;
+            int j = 0;
+            for (;i<new_big.Length;j++ )
+            {
+                if (i==reduce)
+                {
+                    reduce = -1;
+                    continue;
+                }
+                new_big[i] = big[j];
+                i++;
+            }
+            return new_big;
+        }
     }
 }

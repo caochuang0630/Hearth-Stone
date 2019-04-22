@@ -46,6 +46,7 @@
     <Compile Include="Card.cs" />
     <Compile Include="Card_Library.cs" />
     <Compile Include="console.cs" />
+    <Compile Include="Game.cs" />
     <Compile Include="Hero.cs" />
     <Compile Include="Method.cs" />
     <Compile Include="Program.cs" />

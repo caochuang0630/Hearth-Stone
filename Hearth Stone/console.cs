@@ -45,14 +45,14 @@ namespace Hearth_Stone
         //总输出方法
         public void display()
         {
-            this.填充空格(display0);
-            this.渲染边框(display0);
+            填充空格(display0);
+            渲染边框(display0);
             this.渲染英雄(team0_hero,team1_hero);
             this.渲染敌方随从(team0_Entourage);
             this.渲染我方随从(team1_Entourage);
             this.渲染中线(round);
             this.渲染水晶(crystal_0,crystal_1);
-            this.渲染卡牌剩余();
+            this.渲染卡牌剩余(Remaining_card, Remaining_card);
             foreach (int i in Program.range(display0.GetLength(0)))
             {
                 foreach (int j in Program.range(display0.GetLength(1)))
@@ -95,7 +95,7 @@ namespace Hearth_Stone
         }
 
         //填充空格给显示数组
-        public void 填充空格(char[,] a)
+        public static void 填充空格(char[,] a)
         {
             foreach (int i in Program.range(a.GetLength(0)))
             {
@@ -108,7 +108,7 @@ namespace Hearth_Stone
 
         //渲染方法
         //渲染边框
-        public void 渲染边框(char[,] a)
+        public static void 渲染边框(char[,] a)
         {
             foreach (int i in Program.range(a.GetLength(1)))
             {
@@ -130,7 +130,7 @@ namespace Hearth_Stone
         }
 
         //渲染两边框
-        public void 渲染两边框(char[,] a)
+        public static void 渲染两边框(char[,] a)
         {
             for (int i = 0; i < a.GetLength(0) - 1; i++)
             {
@@ -141,7 +141,7 @@ namespace Hearth_Stone
         }
 
         //把一个数组插入进一个大数组里面去，条件是角标
-        public char[] 插入(char[] big,char[] small,int a)
+        public static char[] 插入(char[] big,char[] small,int a)
         {
             for (int i = a,j = 0; i<a+small.Length;i++,j++)
             {
@@ -182,7 +182,7 @@ namespace Hearth_Stone
 
             //把渲染进整个大画面
             char[,] hero0_display = new char[hero0.GetLength(0),display0.GetLength(1)];
-            this.填充空格(hero0_display);
+            填充空格(hero0_display);
             渲染边框(hero0_display);
             foreach (int i in Program.range(hero0_display.GetLength(0)))
             {
@@ -233,7 +233,7 @@ namespace Hearth_Stone
             }
             //把渲染进整个大画面
             char[,] hero1_display = new char[hero1.GetLength(0), display0.GetLength(1)];
-            this.填充空格(hero1_display);
+            填充空格(hero1_display);
             渲染边框(hero1_display);
             foreach (int i in Program.range(hero1_display.GetLength(0)))
             {
@@ -263,8 +263,9 @@ namespace Hearth_Stone
         //渲染一张卡
         public char[,] 渲染一张卡(Card c)
         {
-            this.填充空格(card);
-            this.渲染边框(card);
+
+            填充空格(card);
+            渲染边框(card);
             //把攻击力数字放在字符数组里
             char[] attack = c.card_attack.ToString().ToCharArray();         
             foreach (int i in Program.range(attack.Length))
@@ -293,7 +294,7 @@ namespace Hearth_Stone
             }
             //字符串放在char[,]数组里面
             char[,] card_name = new char[card_name_row,6];
-            this.填充空格(card_name);
+            填充空格(card_name);
             for (int i =0,j = 0;i<card_name.GetLength(0) ;i++)
             {
                 for (int k = 0; k < card_name.GetLength(1); k++,j++)
@@ -335,7 +336,7 @@ namespace Hearth_Stone
             }
             //字符串放在char[,]数组里面
             char[,] card_describe = new char[card_describe_row, 6];
-            this.填充空格(card_describe);
+            填充空格(card_describe);
             for (int i = 0, j = 0; i < card_describe.GetLength(0); i++)
             {
                 for (int k = 0; k < card_describe.GetLength(1); k++, j++)
@@ -370,8 +371,8 @@ namespace Hearth_Stone
         {
             //保存整个敌方随从渲染
             char[,] card_big = new char[display0.Length,card.Length];
-            this.填充空格(card_big);
-            this.渲染两边框(card_big);
+            填充空格(card_big);
+            渲染两边框(card_big);
 
 
             char[,,] card_small = new char[team.Length,card.GetLength(0),card.GetLength(1)];      //保存临时渲染的单张卡
@@ -417,8 +418,8 @@ namespace Hearth_Stone
         {
             //保存整个敌方随从渲染
             char[,] card_big = new char[display0.Length, card.Length];
-            this.填充空格(card_big);
-            this.渲染两边框(card_big);
+            填充空格(card_big);
+            渲染两边框(card_big);
 
             //保存临时渲染的单张卡
             char[,,] card_small = new char[team.Length, card.GetLength(0), card.GetLength(1)];      
@@ -512,18 +513,18 @@ namespace Hearth_Stone
             }
             foreach (int i in Program.range(team0_crystals.Length))
             {
-                display0[display0.GetLength(0) - hero0.GetLength(1)+2, i + 2] = team0_crystals[i];//加二是为了输出水晶卡在横线上
+                display0[display0.GetLength(0) - hero0.GetLength(1)+2, i + 2] = team1_crystals[i];//加二是为了输出水晶卡在横线上
             }
         }
 
         //渲染剩余卡牌
-        public void 渲染卡牌剩余()
+        public void 渲染卡牌剩余(Card_Library rc,Card_Library rc1)
         {
             string card_Remaining = "还剩：";      //剩余卡牌
-            char[] Remaining =new char[Remaining_card.library.Length.ToString().Length];     //剩余卡牌数量
+            char[] Remaining =new char[rc.library.Length.ToString().Length];     //剩余卡牌数量
             foreach (int i in Program.range(Remaining.Length))
             {
-                Remaining[i] = Method.数字半转全(Remaining_card.library.Length.ToString()[i]);
+                Remaining[i] = Method.数字半转全(rc.library.Length.ToString()[i]);
                 card_Remaining += Remaining[i];
             }
             card_Remaining += "张牌";
@@ -533,10 +534,10 @@ namespace Hearth_Stone
             }
 
             string card_Remaining1 = "还剩：";      //剩余卡牌
-            char[] Remaining1 = new char[Remaining_card1.library.Length.ToString().Length];     //剩余卡牌数量
+            char[] Remaining1 = new char[rc1.library.Length.ToString().Length];     //剩余卡牌数量
             foreach (int i in Program.range(Remaining1.Length))
             {
-                Remaining1[i] = Method.数字半转全(Remaining_card1.library.Length.ToString()[i]);
+                Remaining1[i] = Method.数字半转全(rc1.library.Length.ToString()[i]);
                 card_Remaining1 += Remaining1[i];
             }
             card_Remaining1 += "张牌";

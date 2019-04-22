@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Hearth_Stone
 {
-    class Card
+    struct Card
     {
         //变量
         public string card_name;    //卡牌名字
@@ -27,6 +27,12 @@ namespace Hearth_Stone
                 this.card_attack = ca;
                 this.card_blood = cb;
             }
+            else
+            {
+                this.card_attack = 0;
+                this.card_blood = 0;
+            }
+            this.Alive = true;
         }
         //打出卡牌
         public void ussing_card()
