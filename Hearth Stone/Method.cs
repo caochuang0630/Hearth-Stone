@@ -120,6 +120,7 @@ namespace Hearth_Stone
             return Entourage;
         }
 
+
         //输出一个二维数组
         public static void 输出二维数组(char[,] array)
         {

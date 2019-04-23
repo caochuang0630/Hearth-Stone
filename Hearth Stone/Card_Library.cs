@@ -8,7 +8,7 @@ namespace Hearth_Stone
 {
     class Card_Library
     {
-        public Card[] library = new Card[3];      //牌库
+        public Card[] library = new Card[10];      //牌库
 
         public Card_Library()
         {

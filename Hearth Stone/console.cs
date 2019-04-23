@@ -21,10 +21,11 @@ namespace Hearth_Stone
         private int crystal_1;
         private Card_Library Remaining_card;            //敌方卡牌相关信息
         private Card_Library Remaining_card1;            //我方卡牌相关信息
+        private Card[] hand_card;       //保存手牌信息
 
 
         //构造方法
-        public console(Hero h0,Hero h1,Card[] te0,Card[] te1,bool r,int cry0,int cry1, Card_Library rc, Card_Library rc1)
+        public console(Hero h0,Hero h1,Card[] te0,Card[] te1,bool r,int cry0,int cry1, Card_Library rc, Card_Library rc1,Card[] hc)
         {
             this.team0_hero = h0;
             this.team1_hero = h1;
@@ -35,6 +36,7 @@ namespace Hearth_Stone
             this.crystal_1 = cry1;
             this.Remaining_card = rc;
             this.Remaining_card1 = rc1;
+            this.hand_card = hc;
         }
 
         public console()
@@ -61,6 +63,7 @@ namespace Hearth_Stone
                 }
                 Console.WriteLine();
             }
+            this.渲染手牌(hand_card);
         }
 
         //居中方法
@@ -549,5 +552,39 @@ namespace Hearth_Stone
 
         }
 
+        //渲染手牌
+        public void 渲染手牌(Card[] hand_c)
+        {
+            //保存临时渲染的单张卡
+            char[,,] card_small = new char[hand_c.Length, card.GetLength(0), card.GetLength(1)];
+            foreach (int i in Program.range(card_small.GetLength(0)))
+            {
+                foreach (int j in Program.range(card_small.GetLength(1)))
+                {
+                    foreach (int k in Program.range(card_small.GetLength(2)))
+                    {
+                        card_small[i, j, k] = 渲染一张卡(hand_c[i])[j, k];
+                    }
+                }
+            }
+
+            char[,] card_plus = new char[card.GetLength(0), hand_c.Length * card.GetLength(1) + (hand_c.Length - 1)];      //保存把卡加在一起渲染
+            填充空格(card_plus);
+            int list = 0;       //控制列数
+            foreach (int k in Program.range(hand_c.Length))
+            {
+                foreach (int i in Program.range(card_small.GetLength(2)))
+                {
+                    foreach (int j in Program.range(card_small.GetLength(1)))
+                    {
+                        card_plus[j, list] = card_small[k, j, i];
+                    }
+                    list++;
+                }
+                list++;
+            }
+
+            Method.输出二维数组(card_plus);
+        }
     }
 }

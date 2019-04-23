@@ -18,6 +18,8 @@ namespace Hearth_Stone
         private int crystal_1;
         private Card_Library Remaining_card;            //敌方卡牌相关信息
         private Card_Library Remaining_card1;            //我方卡牌相关信息
+        private console c;              //保存输出的数据
+        private Card[] hand_card;       //保存手牌信息
 
         //构造方法
         public Game()
@@ -38,6 +40,7 @@ namespace Hearth_Stone
             this.crystal_1 = 9;
             this.Remaining_card = new Card_Library();
             this.Remaining_card1 = new Card_Library();
+            this.hand_card = new Card[0];
         }
 
 
@@ -55,40 +58,74 @@ namespace Hearth_Stone
             Console.ForegroundColor = ConsoleColor.Black;
             Method.输出二维数组(start_display);
             Console.ReadLine();
+
+            //抽四张牌
+            for (int i = 0;i<4;i++)
+            {
+                this.加牌(hand_card,round);
+            }
             war();
+        }
+
+        //刷新界面
+        public void refresh(Hero t0h, Hero t1h, Card[] t0e, Card[] t1e, bool r,int c0,int c1, Card_Library rc, Card_Library rc1,Card[] hc)
+        {
+            Console.Clear();
+            this.c = new console(t0h, t1h, t0e, t1e, r, c0, c1, rc, rc1,hc);
+            c.display();
         }
 
         //战场
         public void war()
         {
-            Console.Clear();
-            console c = new console(team0_hero,team1_hero,team0_Entourage,team1_Entourage,round,crystal_0,crystal_1,Remaining_card,Remaining_card1);
-            c.display();
+            refresh(team0_hero, team1_hero, team0_Entourage, team1_Entourage, round, crystal_0, crystal_1, Remaining_card, Remaining_card1,hand_card);
 
+            Console.WriteLine("按一下抽一张牌");
+            Console.ReadLine();
+            this.加牌(hand_card,round);
+            refresh(team0_hero, team1_hero, team0_Entourage, team1_Entourage, round, crystal_0, crystal_1, Remaining_card, Remaining_card1, hand_card);
+            /*
+            Console.Clear();
+            c = new console(team0_hero, team1_hero, team0_Entourage, team1_Entourage, round, crystal_0, crystal_1, Remaining_card, Remaining_card1, hand_card);
+            c.display();
+            */
+        }
+
+        //攻击方法
+        public void 进攻()
+        {
             //保存进攻和攻击随从的角标
             Console.WriteLine("请选择你想要进攻随从的编号(从左往右开始数第一个是0)：");
             int my_Entourage = int.Parse(Console.ReadLine());
             Console.WriteLine("请选择你想要攻击随从的编号(从左往右开始数第一个是0)：");
             int he_Entourage = int.Parse(Console.ReadLine());
-            Card[][] back_attack= Method.attack(team1_Entourage, my_Entourage, team0_Entourage, he_Entourage);
+            Card[][] back_attack = Method.attack(team1_Entourage, my_Entourage, team0_Entourage, he_Entourage);
             team1_Entourage = back_attack[0];
             team0_Entourage = back_attack[1];
 
-
-            Console.Clear();
-            c = new console(team0_hero, team1_hero, team0_Entourage, team1_Entourage, round, crystal_0, crystal_1, Remaining_card, Remaining_card1);
-            c.display();
         }
 
-        //出牌提示
-        public void 进攻()
+        //抽一张牌
+        public void 加牌(Card[] card_hand,bool b)
         {
-            //保存进攻和攻击随从的角标
-            Console.WriteLine("请选择你想要进攻随从的编号(从左往右开始数第一个是0)：");
-            int my_Entourage = int.Parse(Console.ReadLine());       
-            Console.WriteLine("请选择你想要攻击随从的编号(从左往右开始数第一个是0)：");
-            int he_Entourage = int.Parse(Console.ReadLine());
-            
+            Card[] card_temporary =new Card[card_hand.Length+1];        //临时保存手牌信息
+            foreach (int i in Program.range(card_hand.Length))
+            {
+                card_temporary[i] = card_hand[i];
+            }
+            if (b == true)
+            {
+                card_temporary[card_temporary.GetUpperBound(0)] = this.Remaining_card1.抽一张牌();
+            }
+            else
+            {
+                card_temporary[card_temporary.GetUpperBound(0)] = this.Remaining_card.抽一张牌();
+            }
+            this.hand_card = new Card[card_temporary.Length];
+            foreach (int i in Program.range(hand_card.Length))
+            {
+                this.hand_card[i] = card_temporary[i];
+            }
         }
     } 
 

@@ -13,11 +13,11 @@ namespace Hearth_Stone
         {
             //主程序
 
-
             /*
             Console.BackgroundColor = ConsoleColor.Cyan;
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Title = "炉石传说";
+
             Hero h0 = new Hero(0);
             Hero h1 = new Hero(1);
             Card card0 = new Card("炎魔之王拉格纳罗斯",8,8, "让火焰净化一切",8);
@@ -30,7 +30,12 @@ namespace Hearth_Stone
             }
             Card_Library cl = new Card_Library();
             Card_Library c2 = new Card_Library();
-            console c = new console(h0,h1,card1,card2,false,6,6,cl,c2);
+            Card[] hand = new Card[5];
+            foreach (int i in range(hand.Length))
+            {
+                hand[i] = card0;
+            }
+            console c = new console(h0,h1,card1,card2,false,6,6,cl,c2,hand);
             c.display();
             */
             
