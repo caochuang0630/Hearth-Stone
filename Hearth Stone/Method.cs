@@ -152,5 +152,18 @@ namespace Hearth_Stone
             }
             return new_big;
         }
+
+        //一个数组加一个元素
+        public static Card[] 加数组(Card[] big, Card c)
+        {
+            Card[] new_big = new Card[big.Length + 1];
+            foreach (int i in Program.range(big.Length))
+            {
+                new_big[i] = big[i];
+            }
+            new_big[new_big.GetUpperBound(0)] = c;
+            return new_big;
+        }
+
     }
 }

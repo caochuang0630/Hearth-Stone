@@ -54,7 +54,7 @@ namespace Hearth_Stone
             this.渲染我方随从(team1_Entourage);
             this.渲染中线(round);
             this.渲染水晶(crystal_0,crystal_1);
-            this.渲染卡牌剩余(Remaining_card, Remaining_card);
+            this.渲染卡牌剩余(Remaining_card, Remaining_card1);
             foreach (int i in Program.range(display0.GetLength(0)))
             {
                 foreach (int j in Program.range(display0.GetLength(1)))
@@ -372,93 +372,98 @@ namespace Hearth_Stone
         //渲染敌方随从
         public void 渲染敌方随从(Card[] team)
         {
-            //保存整个敌方随从渲染
-            char[,] card_big = new char[display0.Length,card.Length];
-            填充空格(card_big);
-            渲染两边框(card_big);
-
-
-            char[,,] card_small = new char[team.Length,card.GetLength(0),card.GetLength(1)];      //保存临时渲染的单张卡
-            foreach (int i in Program.range(card_small.GetLength(0)))
-            {
-                foreach (int j in Program.range(card_small.GetLength(1)))
-                {
-                    foreach (int k in Program.range(card_small.GetLength(2)))
-                    {
-                        card_small[i, j, k] = 渲染一张卡(team[i])[j,k];
-                    }
-                }
-            }
-
-            char[,] card_plus = new char[card.GetLength(0), team.Length * card.GetLength(1) + (team.Length - 1)];      //保存把卡加在一起渲染
-            填充空格(card_plus);
-            int list=0;       //控制列数
-            foreach (int k in Program.range(team.Length))
+            if (team.Length!=0)
             { 
-                foreach (int i in Program.range(card_small.GetLength(2)))
+                //保存整个敌方随从渲染
+                char[,] card_big = new char[display0.Length,card.Length];
+                填充空格(card_big);
+                渲染两边框(card_big);
+
+
+                char[,,] card_small = new char[team.Length,card.GetLength(0),card.GetLength(1)];      //保存临时渲染的单张卡
+                foreach (int i in Program.range(card_small.GetLength(0)))
                 {
                     foreach (int j in Program.range(card_small.GetLength(1)))
                     {
-                        card_plus[j, list] = card_small[k,j,i];
+                        foreach (int k in Program.range(card_small.GetLength(2)))
+                        {
+                            card_small[i, j, k] = 渲染一张卡(team[i])[j,k];
+                        }
                     }
-                    list ++;
                 }
-                list++;
-            }
-            //将加在一起渲染的数组放进主显示数组里面并且居中
-            foreach (int i in Program.range(card_plus.GetLength(0)))
-            {
-                foreach (int j in Program.range(display0.GetLength(1)))
-                {
-                    display0[i + hero0.GetLength(0) +1+ hero_space_Entourage, j] = 居中(取一维数组(display0, i + hero0.GetLength(0) + 1), 取一维数组(card_plus, i))[j];
-                }
-            }
 
+                char[,] card_plus = new char[card.GetLength(0), team.Length * card.GetLength(1) + (team.Length - 1)];      //保存把卡加在一起渲染
+                填充空格(card_plus);
+                int list=0;       //控制列数
+                foreach (int k in Program.range(team.Length))
+                { 
+                    foreach (int i in Program.range(card_small.GetLength(2)))
+                    {
+                        foreach (int j in Program.range(card_small.GetLength(1)))
+                        {
+                            card_plus[j, list] = card_small[k,j,i];
+                        }
+                        list ++;
+                    }
+                    list++;
+                }
+                //将加在一起渲染的数组放进主显示数组里面并且居中
+                foreach (int i in Program.range(card_plus.GetLength(0)))
+                {
+                    foreach (int j in Program.range(display0.GetLength(1)))
+                    {
+                        display0[i + hero0.GetLength(0) +1+ hero_space_Entourage, j] = 居中(取一维数组(display0, i + hero0.GetLength(0) + 1), 取一维数组(card_plus, i))[j];
+                    }
+                }
+            }
         }
 
         //渲染我方随从
         public void 渲染我方随从(Card[] team)
         {
-            //保存整个敌方随从渲染
-            char[,] card_big = new char[display0.Length, card.Length];
-            填充空格(card_big);
-            渲染两边框(card_big);
+            if (team.Length != 0)
+            { 
+                //保存整个敌方随从渲染
+                char[,] card_big = new char[display0.Length, card.Length];
+                填充空格(card_big);
+                渲染两边框(card_big);
 
-            //保存临时渲染的单张卡
-            char[,,] card_small = new char[team.Length, card.GetLength(0), card.GetLength(1)];      
-            foreach (int i in Program.range(card_small.GetLength(0)))
-            {
-                foreach (int j in Program.range(card_small.GetLength(1)))
-                {
-                    foreach (int k in Program.range(card_small.GetLength(2)))
-                    {
-                        card_small[i, j, k] = 渲染一张卡(team[i])[j, k];
-                    }
-                }
-            }
-
-            char[,] card_plus = new char[card.GetLength(0), team.Length * card.GetLength(1) + (team.Length - 1)];      //保存把卡加在一起渲染
-            填充空格(card_plus);
-            int list = 0;       //控制列数
-            foreach (int k in Program.range(team.Length))
-            {
-                foreach (int i in Program.range(card_small.GetLength(2)))
+                //保存临时渲染的单张卡
+                char[,,] card_small = new char[team.Length, card.GetLength(0), card.GetLength(1)];      
+                foreach (int i in Program.range(card_small.GetLength(0)))
                 {
                     foreach (int j in Program.range(card_small.GetLength(1)))
                     {
-                        card_plus[j, list] = card_small[k, j, i];
+                        foreach (int k in Program.range(card_small.GetLength(2)))
+                        {
+                            card_small[i, j, k] = 渲染一张卡(team[i])[j, k];
+                        }
+                    }
+                }
+
+                char[,] card_plus = new char[card.GetLength(0), team.Length * card.GetLength(1) + (team.Length - 1)];      //保存把卡加在一起渲染
+                填充空格(card_plus);
+                int list = 0;       //控制列数
+                foreach (int k in Program.range(team.Length))
+                {
+                    foreach (int i in Program.range(card_small.GetLength(2)))
+                    {
+                        foreach (int j in Program.range(card_small.GetLength(1)))
+                        {
+                            card_plus[j, list] = card_small[k, j, i];
+                        }
+                        list++;
                     }
                     list++;
                 }
-                list++;
-            }
 
-            //将加在一起渲染的数组放进主显示数组里面并且居中
-            for (int i = card_plus.GetLength(0)-1,k = display0.GetLength(0) - 2- hero_space_Entourage - hero0.GetLength(0); i>= 0; i--,k--)
-            {
-                foreach (int j in Program.range(display0.GetLength(1)))
+                //将加在一起渲染的数组放进主显示数组里面并且居中
+                for (int i = card_plus.GetLength(0)-1,k = display0.GetLength(0) - 2- hero_space_Entourage - hero0.GetLength(0); i>= 0; i--,k--)
                 {
-                    display0[k, j] = 居中(取一维数组(display0, k), 取一维数组(card_plus, i))[j];
+                    foreach (int j in Program.range(display0.GetLength(1)))
+                    {
+                        display0[k, j] = 居中(取一维数组(display0, k), 取一维数组(card_plus, i))[j];
+                    }
                 }
             }
         }

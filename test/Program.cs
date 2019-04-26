@@ -10,24 +10,12 @@ namespace test
     {
         static void Main(string[] args)
         {
-            c c1 = new c();
-            c[] c = new c[3];
-            c[] cc = new c[3];
-
-            foreach(int i in range(3) )
+            int[] i = new int[0];
+            if (i==null)
             {
-                c[i] = c1;
-                cc[i] = c1;
+                Console.WriteLine("给哈哈哈");
             }
-            foreach (int i in range(3))
-            {
-                Console.WriteLine("{0},{1}",c[i].a,c[i].b);
-            }
-            结构体(c);
-            foreach (int i in range(3))
-            {
-                Console.WriteLine("{0},{1}", c[i].a, c[i].b);
-            }
+            Console.WriteLine(i);
 
         }
 
