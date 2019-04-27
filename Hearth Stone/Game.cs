@@ -11,8 +11,8 @@ namespace Hearth_Stone
         //成员变量
         private Card[] team0_Entourage; //敌方随从数组
         private Card[] team1_Entourage; //我方随从数组
-        private Hero team0_hero;   //敌方英雄
-        private Hero team1_hero;   //我方英雄
+        public Hero team0_hero;   //敌方英雄
+        public Hero team1_hero;   //我方英雄
         private bool round;         //保存回合，false为敌方回合，true为我方回合
         private int crystal_0;                          //保存敌方水晶数量
         private int crystal_1;                          //保存我方水晶数量
@@ -253,6 +253,8 @@ namespace Hearth_Stone
             
             this.回合();
         }
+
+        //判断
     } 
 
 

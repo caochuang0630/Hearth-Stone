@@ -38,9 +38,29 @@ namespace Hearth_Stone
             console c = new console(h0,h1,card1,card2,false,6,6,cl,c2,hand);
             c.display();
             */
-            
+
             Game G = new Game();
-            G.start();
+            Thread th = new Thread(G.start);
+            th.Start();
+
+            while (true)
+            {
+                if (G.team0_hero.hero_blood<=0)
+                {
+                    Console.Clear();
+                    Console.WriteLine("胜利！");
+                    th.Abort();
+                    return;
+                }else if (G.team1_hero.hero_blood <= 0)
+                {
+                    Console.Clear();
+                    Console.WriteLine("败北");
+                    th.Abort();
+                    return;
+                }
+                Thread.Sleep(500);
+            }
+            
 
 
 
