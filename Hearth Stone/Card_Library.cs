@@ -16,7 +16,7 @@ namespace Hearth_Stone
             library[1] = new Card("厄运鼹鼠", 1, 3, "呃呃呃呃", 1);
             library[2] = new Card("鳄鱼", 3, 2, "呃呃呃", 2);
             library[3] = new Card("冲锋鱼人", 2, 1, "冲锋", 2);
-            library[4] = new Card("炎魔之王拉格纳罗斯", 8, 8, "让火焰净化一切", 8);
+            library[4] = new Card("炎魔之王拉格纳罗斯", 5, 5, "让火焰净化一切", 5);
             library[5] = new Card("城墙", 2, 4, "嘲讽", 3);
             library[6] = new Card("布莱恩铜须", 2, 4, "战吼效果触发两次", 3);
             library[7] = new Card("软泥怪", 3, 3, "摧毁对手武器", 3);

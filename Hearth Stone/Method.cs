@@ -165,5 +165,19 @@ namespace Hearth_Stone
             return new_big;
         }
 
+        //求最大值，并返回角标
+        public static int 最大值(int[] number)
+        {
+            int max = number[0];
+            int maxid = 0;
+            foreach (int i in Program.range(number.Length))
+            {
+                if (number[i]>max)
+                {
+                    maxid = i;
+                }
+            }
+            return maxid;
+        }
     }
 }

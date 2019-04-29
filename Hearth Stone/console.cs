@@ -269,6 +269,13 @@ namespace Hearth_Stone
 
             填充空格(card);
             渲染边框(card);
+            //渲染法力水晶
+            char[] crystal = c.crystal.ToString().ToCharArray();
+            foreach (int i in Program.range(crystal.Length))
+            {
+                card[0, i] = Method.数字半转全(crystal[i]);
+            }
+
             //把攻击力数字放在字符数组里
             char[] attack = c.card_attack.ToString().ToCharArray();         
             foreach (int i in Program.range(attack.Length))

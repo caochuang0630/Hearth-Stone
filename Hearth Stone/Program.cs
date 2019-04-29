@@ -43,24 +43,28 @@ namespace Hearth_Stone
             Thread th = new Thread(G.start);
             th.Start();
 
+            //判断是否死亡
             while (true)
             {
                 if (G.team0_hero.hero_blood<=0)
                 {
                     Console.Clear();
-                    Console.WriteLine("胜利！");
+                    display.胜利();
                     th.Abort();
+                    Console.WriteLine("请按任意键继续");
+                    Console.ReadLine();
                     return;
                 }else if (G.team1_hero.hero_blood <= 0)
                 {
                     Console.Clear();
-                    Console.WriteLine("败北");
+                    display.败北();
                     th.Abort();
+                    Console.WriteLine("请按任意键继续");
+                    Console.ReadLine();
                     return;
                 }
-                Thread.Sleep(500);
+                Thread.Sleep(2000);
             }
-            
 
 
 

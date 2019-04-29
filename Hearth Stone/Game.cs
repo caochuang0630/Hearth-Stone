@@ -3,23 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Hearth_Stone
 {
     class Game
     {
         //成员变量
-        private Card[] team0_Entourage; //敌方随从数组
+        public Card[] team0_Entourage; //敌方随从数组
         private Card[] team1_Entourage; //我方随从数组
         public Hero team0_hero;   //敌方英雄
         public Hero team1_hero;   //我方英雄
         private bool round;         //保存回合，false为敌方回合，true为我方回合
-        private int crystal_0;                          //保存敌方水晶数量
+        public int crystal_0;                          //保存敌方水晶数量
         private int crystal_1;                          //保存我方水晶数量
-        private Card_Library Remaining_card;            //敌方卡牌相关信息
+        public Card_Library Remaining_card;            //敌方卡牌相关信息
         private Card_Library Remaining_card1;            //我方卡牌相关信息
         private console c;              //保存输出的数据
-        private Card[] hand_card;       //保存手牌信息
+        private Card[] hand_card;       //保存我方手牌信息
+        public Card[] hand_card1;       //保存敌方手牌信息
+        private int Tired;              //我方疲劳值
+        public int Tired1;              //敌方疲劳值
 
         //构造方法
         public Game()
@@ -39,11 +43,12 @@ namespace Hearth_Stone
 
             this.team0_hero = new Hero(2);
             this.team1_hero = new Hero(5);
-            this.crystal_0 = 5;
+            this.crystal_0 = 9;
             this.crystal_1 = 9;
             this.Remaining_card = new Card_Library();
             this.Remaining_card1 = new Card_Library();
             this.hand_card = new Card[0];
+            this.hand_card1 = new Card[0];
             this.round = true;
         }
 
@@ -66,7 +71,8 @@ namespace Hearth_Stone
             //抽四张牌
             for (int i = 0;i<4;i++)
             {
-                this.加牌(hand_card,round);
+                this.加牌(hand_card,true);
+                this.加牌(hand_card1, false);
             }
             war();
         }
@@ -103,6 +109,12 @@ namespace Hearth_Stone
                 int my_Entourage = int.Parse(Console.ReadLine());
                 Console.WriteLine("请选择你想要攻击随从的编号(从左往右开始数第一个是0，输入-1为攻击英雄)：)：");
                 int he_Entourage = int.Parse(Console.ReadLine());
+
+                if ((my_Entourage>team1_Entourage.GetUpperBound(0)|| my_Entourage < team1_Entourage.GetLowerBound(0)))
+                {
+                    Console.WriteLine("没有这个随从！，请重试！");
+                    this.进攻();
+                }
 
                 if (he_Entourage != -1)
                 {
@@ -147,16 +159,22 @@ namespace Hearth_Stone
             if (b == true)
             {
                 card_temporary[card_temporary.GetUpperBound(0)] = this.Remaining_card1.抽一张牌();
+                this.hand_card = new Card[card_temporary.Length];
+                foreach (int i in Program.range(hand_card.Length))
+                {
+                    this.hand_card[i] = card_temporary[i];
+                }
             }
             else
             {
                 card_temporary[card_temporary.GetUpperBound(0)] = this.Remaining_card.抽一张牌();
+                this.hand_card1 = new Card[card_temporary.Length];
+                foreach (int i in Program.range(hand_card.Length))
+                {
+                    this.hand_card1[i] = card_temporary[i];
+                }
             }
-            this.hand_card = new Card[card_temporary.Length];
-            foreach (int i in Program.range(hand_card.Length))
-            {
-                this.hand_card[i] = card_temporary[i];
-            }
+            
         }
 
         public void 抽牌()
@@ -171,8 +189,10 @@ namespace Hearth_Stone
             }
             else
             {
-                Console.WriteLine("你没牌了，扣1滴血");
-                this.team1_hero.hero_blood -= 1;
+                this.Tired++;
+                this.team1_hero.hero_blood -= this.Tired;
+                Console.WriteLine("你没牌了，扣{0}滴血", this.Tired);
+                Thread.Sleep(2000);
             }
             refresh();
             this.回合();
@@ -194,6 +214,7 @@ namespace Hearth_Stone
                     break;
                 case "2":
                     this.round = false;
+                    this.敌方回合();
                     break;
                 case "3":
                     this.出牌();
@@ -254,7 +275,61 @@ namespace Hearth_Stone
             this.回合();
         }
 
-        //判断
+
+        //---------------------------------------------------------------------------------------
+        //AI机器人
+        //敌方回合
+        public  void 敌方回合()
+        {
+            this.敌方出牌();
+            
+        }
+
+        //电脑出牌
+        public void 敌方出牌()
+        {
+            //出牌动作，判断法力水晶和出牌
+
+            while (true)
+            {
+                int[] crystal = new int[this.hand_card1.Length];
+                foreach (int i in Program.range(this.hand_card1.Length))
+                {
+                    crystal[i] = this.hand_card1[i].crystal;
+                }
+                if (crystal.Length == 0 || this.hand_card1[Method.最大值(crystal)].crystal > this.crystal_0)
+                {
+                    Console.WriteLine("回合结束");
+                    this.refresh();
+                    this.回合();
+                }
+                else if (this.hand_card1[Method.最大值(crystal)].crystal <= this.crystal_0)
+                {
+                    敌方上牌(Method.最大值(crystal));
+                }
+                //电脑出牌延迟
+                Thread.Sleep(1000);
+            }
+        }
+
+        public  void 敌方上牌(int card_number)//参数为出手牌的索引（第一个是0）
+        {
+            //战场满了没
+
+            if (this.team0_Entourage.Length + 1 <= 7)
+            {
+                this.crystal_0 -= this.hand_card1[card_number].crystal;
+                //战场加上
+                this.team0_Entourage = Method.加数组(this.team0_Entourage, this.hand_card1[card_number]);
+                //手牌减去
+                this.hand_card1 = Method.减数组(this.hand_card1, card_number);
+
+            }
+            else
+            {
+                return;
+            }
+        }
     } 
 
 
