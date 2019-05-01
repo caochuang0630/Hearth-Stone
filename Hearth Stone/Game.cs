@@ -369,6 +369,7 @@ namespace Hearth_Stone
         //敌方回合
         public  void 敌方回合()
         {
+            this.敌方抽牌();
             this.敌方出牌();
             this.敌方进攻();
 
@@ -382,7 +383,7 @@ namespace Hearth_Stone
                 this.crystal_0_upper++;
             }
             this.crystal_0 = crystal_0_upper;
-            this.回合();
+            this.war();
         }
 
         //电脑出牌
@@ -456,6 +457,21 @@ namespace Hearth_Stone
 
         }
 
+        //抽牌
+        public void 敌方抽牌()
+        {
+            if (Remaining_card.library.Length != 0)
+            {
+                this.加牌(hand_card1, round);
+            }
+            else
+            { 
+                this.Tired++;
+                this.team1_hero.hero_blood -= this.Tired;
+                game_history.Add("敌方没牌了，扣" + Tired + "滴血");
+                Thread.Sleep(500);
+            }
+        }
     } 
 
 
