@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Collections;
 
 namespace Hearth_Stone
 {
@@ -17,6 +18,8 @@ namespace Hearth_Stone
         private bool round;         //保存回合，false为敌方回合，true为我方回合
         public int crystal_0;                          //保存敌方水晶数量
         private int crystal_1;                          //保存我方水晶数量
+        public int crystal_0_upper;                     //保存敌方水晶回合上限
+        private int crystal_1_upper;                   //保存我方水晶回合上限
         public Card_Library Remaining_card;            //敌方卡牌相关信息
         private Card_Library Remaining_card1;            //我方卡牌相关信息
         private console c;              //保存输出的数据
@@ -24,6 +27,8 @@ namespace Hearth_Stone
         public Card[] hand_card1;       //保存敌方手牌信息
         private int Tired;              //我方疲劳值
         public int Tired1;              //敌方疲劳值
+
+        public List<string> game_history;
 
         //构造方法
         public Game()
@@ -40,16 +45,16 @@ namespace Hearth_Stone
             */
             this.team0_Entourage = new Card[0];
             this.team1_Entourage = new Card[0];
-
-            this.team0_hero = new Hero(2);
             this.team1_hero = new Hero(5);
-            this.crystal_0 = 9;
-            this.crystal_1 = 9;
+            this.team0_hero = new Hero(2);
+            this.crystal_0_upper = 1;
+            this.crystal_1_upper = 1;
             this.Remaining_card = new Card_Library();
             this.Remaining_card1 = new Card_Library();
             this.hand_card = new Card[0];
             this.hand_card1 = new Card[0];
             this.round = true;
+            this.game_history = new List<string>();
         }
 
 
@@ -68,6 +73,10 @@ namespace Hearth_Stone
             Method.输出二维数组(start_display);
             Console.ReadLine();
 
+            this.选择英雄();
+            crystal_1 = crystal_1_upper;
+
+
             //抽四张牌
             for (int i = 0;i<4;i++)
             {
@@ -84,6 +93,53 @@ namespace Hearth_Stone
             this.c = new console(this.team0_hero,this.team1_hero,this.team0_Entourage,this.team1_Entourage,this.round,this.crystal_0,this.crystal_1,this.Remaining_card,this.Remaining_card1,this.hand_card);
             c.display();
         }
+
+        //选择英雄
+        public void 选择英雄()
+        {
+            Console.Clear();
+            Console.WriteLine("请选择你的英雄：编号依次为法师为1，猎人为9");
+            Console.WriteLine("法师   |   牧师   |术士");
+            Console.WriteLine("德鲁伊 |  祭司萨满|潜行者");
+            Console.WriteLine("战士   |  圣骑士  |猎人");
+            string result = Console.ReadLine();
+            switch (result)
+            {
+                case "1":
+                    team1_hero = new Hero(0);
+                    break;
+                case "2":
+                    team1_hero = new Hero(1);
+                    break;
+                case "3":
+                    team1_hero = new Hero(2);
+                    break;
+                case "4":
+                    team1_hero = new Hero(3);
+                    break;
+                case "5":
+                    team1_hero = new Hero(4);
+                    break;
+                case "6":
+                    team1_hero = new Hero(5);
+                    break;
+                case "7":
+                    team1_hero = new Hero(6);
+                    break;
+                case "8":
+                    team1_hero = new Hero(7);
+                    break;
+                case "9":
+                    team1_hero = new Hero(8);
+                    break;
+                default:
+                    Console.WriteLine("请重新选择");
+                    Console.ReadLine();
+                    this.选择英雄();
+                    break;
+            }
+        }
+
 
         //战场
         public void war()
@@ -112,37 +168,53 @@ namespace Hearth_Stone
 
                 if ((my_Entourage>team1_Entourage.GetUpperBound(0)|| my_Entourage < team1_Entourage.GetLowerBound(0)))
                 {
-                    Console.WriteLine("没有这个随从！，请重试！");
+                    Console.WriteLine("没有这个随从！，请按任意键重试！");
+                    Console.ReadLine();
                     this.进攻();
                 }
+                //判断能不能攻击
+                if (team1_Entourage[my_Entourage].attack_times!=0)
+                {
+                    //判断攻击的是随从还是英雄
+                    if (he_Entourage != -1)
+                    {
+                        if (this.team0_Entourage.Length != 0)
+                        {
+                            //减一次攻击次数
+                            team1_Entourage[my_Entourage].attack_times--;
+                            Card[][] back_attack = Method.attack(team1_Entourage, my_Entourage, team0_Entourage, he_Entourage);
+                            team1_Entourage = back_attack[0];
+                            team0_Entourage = back_attack[1];
+                        }
+                        else
+                        {
+                            Console.WriteLine("没有敌方随从，请按任意键重试！");
+                            Console.ReadLine();
+                            this.进攻();
+                        }
 
-                if (he_Entourage != -1)
-                {
-                    if (this.team0_Entourage.Length != 0)
-                    {
-                        Card[][] back_attack = Method.attack(team1_Entourage, my_Entourage, team0_Entourage, he_Entourage);
-                        team1_Entourage = back_attack[0];
-                        team0_Entourage = back_attack[1];
                     }
-                    else
+                    else if (he_Entourage == -1)
                     {
-                        Console.WriteLine("没有敌方随从，请按任意键重试！");
-                        Console.ReadLine();
-                        this.进攻();
+                        //减一次攻击次数
+                        team1_Entourage[my_Entourage].attack_times--;
+                        this.team0_hero.hero_blood -= this.team1_Entourage[my_Entourage].card_attack;
                     }
-                    
                 }
-                else if (he_Entourage == -1)
+                else
                 {
-                    this.team0_hero.hero_blood -= this.team1_Entourage[my_Entourage].card_attack;
+                    Console.WriteLine("该随从无法攻击，请按任意键重试！");
+                    Console.ReadLine();
+                    this.回合();
                 }
+
+                
             }
             else
             {
                 Console.WriteLine("场上没有随从，请按任意键重试！");
                 Console.ReadLine();
             }
-            refresh();
             this.回合();
 
 
@@ -194,18 +266,15 @@ namespace Hearth_Stone
                 Console.WriteLine("你没牌了，扣{0}滴血", this.Tired);
                 Thread.Sleep(2000);
             }
-            refresh();
             this.回合();
         }
 
         //回合操作
         public void 回合()
         {
+            this.refresh();
             Console.WriteLine("请选择一个操作");
-            Console.WriteLine("1、攻击");
-            Console.WriteLine("2、结束回合");
-            Console.WriteLine("3、打出牌");
-            Console.WriteLine("4、抽一张牌");
+            Console.WriteLine("1、攻击\t2、结束回合\t3、打出牌\t4、抽一张牌\t5、查看日志");
             string choose = Console.ReadLine();
             switch (choose)
             {
@@ -214,6 +283,15 @@ namespace Hearth_Stone
                     break;
                 case "2":
                     this.round = false;
+                    foreach (int i in Program.range(team1_Entourage.Length))
+                    {
+                        team1_Entourage[i].attack_times = 1;
+                    }
+                    if (crystal_1_upper<10)
+                    {
+                        this.crystal_1_upper++;
+                    }
+                    this.crystal_1 = crystal_1_upper;
                     this.敌方回合();
                     break;
                 case "3":
@@ -221,6 +299,15 @@ namespace Hearth_Stone
                     break;
                 case "4":
                     this.抽牌();
+                    break;
+                case "5":
+                    foreach (string i in game_history)
+                    {
+                        Console.WriteLine(i);
+                    }
+                    Console.WriteLine("按任意键返回");
+                    Console.ReadLine();
+                    this.回合();
                     break;
                 default:
                     Console.WriteLine("重新输");
@@ -269,7 +356,8 @@ namespace Hearth_Stone
             }
             else
             {
-                Console.WriteLine("索引错误");
+                Console.WriteLine("索引错误,请按任意键继续");
+                Console.ReadLine();
             }
             
             this.回合();
@@ -282,7 +370,19 @@ namespace Hearth_Stone
         public  void 敌方回合()
         {
             this.敌方出牌();
-            
+            this.敌方进攻();
+
+            this.round = true;
+            foreach (int i in Program.range(team0_Entourage.Length))
+            {
+                team0_Entourage[i].attack_times = 1;
+            }
+            if (crystal_0_upper < 10)
+            {
+                this.crystal_0_upper++;
+            }
+            this.crystal_0 = crystal_0_upper;
+            this.回合();
         }
 
         //电脑出牌
@@ -299,12 +399,11 @@ namespace Hearth_Stone
                 }
                 if (crystal.Length == 0 || this.hand_card1[Method.最大值(crystal)].crystal > this.crystal_0)
                 {
-                    Console.WriteLine("回合结束");
-                    this.refresh();
-                    this.回合();
+                    return;
                 }
                 else if (this.hand_card1[Method.最大值(crystal)].crystal <= this.crystal_0)
                 {
+                    this.game_history.Add("敌方出了一张" + this.hand_card1[Method.最大值(crystal)].card_name);
                     敌方上牌(Method.最大值(crystal));
                 }
                 //电脑出牌延迟
@@ -330,6 +429,33 @@ namespace Hearth_Stone
                 return;
             }
         }
+
+        //电脑攻击
+        public void 敌方进攻()
+        {
+            //全部a脸（更高级的AI不想写码在以后吧）
+            if (this.team0_Entourage.Length != 0)
+            {
+                foreach (int i in Program.range(team0_Entourage.Length))
+                {
+                    if (team0_Entourage[i].attack_times != 0)
+                    {
+                        this.game_history.Add(team0_Entourage[i].card_name + "攻击了我方英雄" + team0_Entourage[i].card_attack + "血");
+                        team1_hero.hero_blood -= team0_Entourage[i].card_attack;
+                    }
+                        
+                    //电脑出牌延迟
+                    Thread.Sleep(500);
+                }
+            }
+            else
+            {
+                return;
+            }
+
+
+        }
+
     } 
 
 

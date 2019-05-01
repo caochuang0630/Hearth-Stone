@@ -15,6 +15,7 @@ namespace Hearth_Stone
         public string card_describe;    //卡牌描述
         public int crystal;         //卡牌需要消耗的法力值
         public bool Alive;          //随从是否存活
+        public int attack_times;       //随从攻击次数
 
         //构造方法
         public Card(string cn,int ca,int cb,string cd, int cry)
@@ -33,6 +34,7 @@ namespace Hearth_Stone
                 this.card_blood = 0;
             }
             this.Alive = true;
+            this.attack_times = 0;
         }
         //打出卡牌
         public void ussing_card()
